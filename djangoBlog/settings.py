@@ -73,10 +73,21 @@ WSGI_APPLICATION = 'djangoBlog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+import pymysql
+pymysql.install_as_MySQLdb()
+
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django_blog',  #数据库名字
+        'USER': 'root',         #账号
+        'PASSWORD': '123456',   #密码
+        'HOST': '127.0.0.1',    #IP
+        'PORT': '3306',         #端口
     }
 }
 
