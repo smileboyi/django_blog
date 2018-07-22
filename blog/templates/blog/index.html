@@ -1,0 +1,29 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}博客首页{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                {% for entry in entries %}
+                    <h2><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h2> <br>
+                    {% if entry.img %}
+                        <img src="{{ entry.img.url }}" width="60%" height="270px"/>
+                    {% endif %}
+                    {% if entry.abstract %}
+                        <p>{{ entry.abstract }}</p>
+                    {% else %}
+                        <p>{{ entry.body|truncatechars:180 }}</p>
+                    {% endif %}
+                    <p>
+                        <span>作者：{{ entry.author }}</span>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;发布时间：{{ entry.created_time }}</span>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;阅读数：{{ entry.visiting }}</span>
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

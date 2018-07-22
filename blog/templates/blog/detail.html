@@ -1,0 +1,44 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}博客详情页{% endblock %}
+
+{% load staticfiles %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'blog/css/github.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <h1>{{ entry.title }}</h1>
+                <p>
+                    <strong>{{ entry.author }}</strong>
+                    &nbsp;&nbsp;&nbsp;&nbsp;{{ entry.created_time|date:'Y年m月d日' }}
+                    &nbsp;&nbsp;&nbsp;&nbsp;分类：
+                    {% for category in entry.category.all %}
+                        &nbsp;&nbsp;<a href="#">{{ category.name }}</a>
+                    {% endfor %}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;标签：
+                    {% for tag in entry.tags.all %}
+                        &nbsp;&nbsp;<a href="#">{{ tag.name }}</a>
+                    {% endfor %}
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;浏览量：
+                    &nbsp;&nbsp;{{ entry.visiting }}
+
+                    {% if entry.img %}
+                        <img src="{{ entry.img.url }}" width="60%" height="270px"/>
+                    {% endif %}
+                    <hr />
+                    <p>
+                        {{ entry.toc|safe }}
+                        {{ entry.body|safe }}
+                    </p>
+                </p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

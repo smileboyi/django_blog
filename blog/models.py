@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.urls import reverse
+
 
 # 文章分类
 class Category(models.Model):
@@ -49,7 +51,17 @@ class Entry(models.Model):
 
   def __str__(self):
     return self.title
+  
+  # 获取详情页地址（自定义方法）
+  def get_absolute_url(self):
+    return reverse('blog:blog_detail',kwargs={'blog_id':self.id})
 
+  # 更新访问量（自定义方法）
+  def increase_visiting(self):
+    self.visiting += 1
+    # update_fields：要保存的字段
+    self.save(update_fields=['visiting'])
+      
   class Meta:
     ordering = ['-created_time']
     verbose_name = '博客正文'

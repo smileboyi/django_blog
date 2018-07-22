@@ -15,10 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 # 路由系统：旧django.conf.urls，新django.urls
-# from django.conf.urls import url,include
-from django.urls import path,include
+from django.conf.urls import url,include
+
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path(r'^blog/',include('blog.urls')),
-]
+    url('admin/', admin.site.urls),
+    url(r'^blog/',include('blog.urls')),
+] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT ) #添加图片的url
