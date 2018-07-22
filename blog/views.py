@@ -142,3 +142,29 @@ def detail(request,blog_id):
 	entry.toc = md.toc
 
 	return render(request,'blog/detail.html',locals())
+
+
+
+def catagory(request,category_id):
+	c = models.Category.objects.get(id=category_id)
+	entries = models.Entry.objects.filter(category=c)
+
+	page = request.GET.get('page',1)
+	entry_list, paginator = make_paginator(entries, page)
+	page_data = pagination_data(paginator, page)
+
+	# 和index()用到的模板是一样的
+	return render(request, 'blog/index.html', locals())
+
+
+def tag(request,tag_id):
+	t = models.Tag.objects.get(id=tag_id)
+	if t.name == "全部":
+			entries = models.Entry.objects.all()
+	else:
+			entries = models.Entry.objects.filter(tags=t)
+	page = request.GET.get('page', 1)
+	entry_list, paginator = make_paginator(entries, page)
+	page_data = pagination_data(paginator, page)
+
+	return render(request, 'blog/index.html', locals())
