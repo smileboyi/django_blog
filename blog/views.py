@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from . import models
+from django.db.models import Q
 
 import markdown, pygments
 
 # https://www.cnblogs.com/kongzhagen/p/6640975.html
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+
 
 # Create your views here.
 
@@ -163,6 +165,26 @@ def tag(request,tag_id):
 			entries = models.Entry.objects.all()
 	else:
 			entries = models.Entry.objects.filter(tags=t)
+	page = request.GET.get('page', 1)
+	entry_list, paginator = make_paginator(entries, page)
+	page_data = pagination_data(paginator, page)
+
+	return render(request, 'blog/index.html', locals())
+
+
+
+def search(request):
+	# 如果是post请求，需要在模板表单里加入csrf_token
+	keyword = request.GET.get('keyword',None)
+	if not keyword:
+		error_msg = '请输入关键字'
+		return render(request,'blog/index.html',locals())
+
+	# 从标题、正文、摘要里面查找关键字，获取包含关键字的文章
+	entries = models.Entry.objects.filter(Q(title__icontains=keyword)
+																				| Q(body__icontains=keyword)
+																				| Q(abstract__icontains=keyword))
+	# 数据的显示和index()方式一致
 	page = request.GET.get('page', 1)
 	entry_list, paginator = make_paginator(entries, page)
 	page_data = pagination_data(paginator, page)

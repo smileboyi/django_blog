@@ -1,0 +1,1 @@
+# templatetags模块名是固定的不能自己起名，因为django会自己在此模块找
