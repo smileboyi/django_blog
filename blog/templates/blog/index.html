@@ -5,9 +5,10 @@
 {% block content %}
 
     <div class="container">
+        <!-- 内容列表 -->
         <div class="row">
             <div class="col-md-9">
-                {% for entry in entries %}
+                {% for entry in entry_list %}
                     <h2><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h2> <br>
                     {% if entry.img %}
                         <img src="{{ entry.img.url }}" width="60%" height="270px"/>
@@ -23,6 +24,51 @@
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;阅读数：{{ entry.visiting }}</span>
                     </p>
                 {% endfor %}
+            </div>
+        </div>
+        <!-- 分页 -->
+        <div id="paginator" class="pull-right">
+                <ul class="pagination">
+                    {% if entry_list.has_previous %}
+                        <li><a href="?page={{ entry_list.previous_page_number }}"><i
+                                class="glyphicon glyphicon-chevron-left"></i>前一页</a></li>
+                    {% endif %}
+
+                    {% if first %}
+                        <li><a href="?page=1">1</a></li>
+                    {% endif %}
+
+                    {% if left %}
+                        {% if left_has_more %}
+                            <span>...</span>
+                        {% endif %}
+
+                        {% for i in left %}
+                            <li><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endfor %}
+                    {% endif %}
+
+                    <li class="active"><a href="?page={{ entry_list.number }}">{{ entry_list.number }}</a></li>
+
+                    {% if right %}
+                        {% for i in right %}
+                            <li><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endfor %}
+
+                        {% if right_has_more %}
+                            <span>...</span>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if last %}
+                        <li><a href="?page={{ entry_list.num_pages }}">{{ entry_list.num_pages }}</a></li>
+                    {% endif %}
+
+                    {% if entry_list.has_next %}
+                        <li><a href="?page={{ entry_list.next_page_number }}">下一页<i
+                                class="glyphicon glyphicon-chevron-right"></i></a></li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </div>
