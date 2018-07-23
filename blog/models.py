@@ -66,3 +66,4 @@ class Entry(models.Model):
     ordering = ['-created_time']
     verbose_name = '博客正文'
     verbose_name_plural = verbose_name
+    
