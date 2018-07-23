@@ -8,6 +8,7 @@ import markdown, pygments
 # https://www.cnblogs.com/kongzhagen/p/6640975.html
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
+from django_comments.models import Comment
 
 # Create your views here.
 
@@ -145,6 +146,22 @@ def detail(request,blog_id):
 	])
 	entry.body = md.convert(entry.body)
 	entry.toc = md.toc
+
+	comment_list = list()
+
+	# 参数为最顶层的评论
+	def get_comment_list(comments):
+		for comment in comments:
+			# 加入最顶层的评论
+			comment_list.append(comment)
+			children = comment.child_comment.all()
+			# 一直获取子评论，直到没有子评论
+			if len(children) > 0:
+				get_comment_list(children)
+
+	top_comments = Comment.objects.filter(object_pk=blog_id, parent_comment=None,
+																				content_type__app_label='blog').order_by('-submit_date')
+	get_comment_list(top_comments)
 
 	return render(request,'blog/detail.html',locals())
 

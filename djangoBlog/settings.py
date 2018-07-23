@@ -39,7 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
     'django.contrib.sitemaps',
+    'django.contrib.sites',
+    'django_comments',
 ]
+
+SITE_ID =1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -87,7 +91,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'django_blog',  #数据库名字
         'USER': 'root',         #账号
-        'PASSWORD': '123456',   #密码
+        'PASSWORD': '',   #密码
         'HOST': '127.0.0.1',    #IP
         'PORT': '3306',         #端口
     }
