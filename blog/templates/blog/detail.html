@@ -39,6 +39,15 @@
                 </p>
             </div>
             <div class="col-md-3">
+                <!-- 除了extends，include也可以定义block -->
+                {% block toc %}
+                    <div class="row">
+                        <div class="widget">
+                            <h3>博客目录</h3>
+                            {{ entry.toc|safe }}
+                        </div>
+                    </div>
+                {% endblock %}
                 {% include 'blog/right_site_bar.html' %}
             </div>
         </div>

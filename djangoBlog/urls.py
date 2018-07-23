@@ -24,12 +24,23 @@ from blog.feed import LatestEntriesFeed
 
 from blog import views as blog_views
 
+from django.contrib.sitemaps import GenericSitemap
+from django.contrib.sitemaps.views import sitemap
+from blog.models import Entry
 
+info_dict = {
+    'queryset': Entry.objects.all(),
+    'date_field': 'modifyed_time'
+}
 
 urlpatterns = [
     url('admin/', admin.site.urls),
     url(r'^blog/',include('blog.urls')),
     url(r'^latest/feed/$', LatestEntriesFeed()),    #RSS订阅
+    # 如果sitemap.xml位于根目录中，它会引用网站中的任何URL。 但是如果站点地图位于/content/sitemap.xml，则它只能引用以/content/开头的网址。
+    # 使用GenericSitemap构造一个GenericSitemap类型的数据，priority为更新频率0-1之间
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': {'blog': GenericSitemap(info_dict, priority=0.6)}},
+      name='django.contrib.sitemaps.views.sitemap'),       #站点地图
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT ) #添加图片的url
 
 
