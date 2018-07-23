@@ -22,9 +22,18 @@ from django.conf.urls.static import static
 
 from blog.feed import LatestEntriesFeed
 
+from blog import views as blog_views
+
+
 
 urlpatterns = [
     url('admin/', admin.site.urls),
     url(r'^blog/',include('blog.urls')),
     url(r'^latest/feed/$', LatestEntriesFeed()),    #RSS订阅
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT ) #添加图片的url
+
+
+# 需要DEBUG = False
+handler403 = blog_views.permission_denied
+handler404 = blog_views.page_not_found
+handler500 = blog_views.page_error

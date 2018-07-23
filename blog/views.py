@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404,redirect
+
 from . import models
 from django.db.models import Q
 
@@ -132,7 +133,9 @@ def index(request):
 
 
 def detail(request,blog_id):
-	entry = models.Entry.objects.get(id=blog_id)
+	# entry = models.Entry.objects.get(id=blog_id)
+	# 查找不到文章跳转到404页面
+	entry = get_object_or_404(models.Entry,id=blog_id)
 	entry.increase_visiting()
 
 	md = markdown.Markdown(extensions=[
@@ -148,7 +151,7 @@ def detail(request,blog_id):
 
 
 def catagory(request,category_id):
-	c = models.Category.objects.get(id=category_id)
+	c = get_object_or_404(models.Category,id=category_id)
 	entries = models.Entry.objects.filter(category=c)
 
 	page = request.GET.get('page',1)
@@ -160,7 +163,7 @@ def catagory(request,category_id):
 
 
 def tag(request,tag_id):
-	t = models.Tag.objects.get(id=tag_id)
+	t = get_object_or_404(models.Tag,id=tag_id)
 	if t.name == "全部":
 			entries = models.Entry.objects.all()
 	else:
@@ -199,3 +202,19 @@ def archives(request,year,month):
 	entry_list,paginator = make_paginator(entries,page)
 	page_data = pagination_data(paginator,page)
 	return render(request,'blog/index.html',locals())
+
+
+
+def permission_denied(request):
+	'''403'''
+	return render(request, 'blog/403.html', locals())
+
+
+def page_not_found(request):
+	'''404'''
+	return render(request, 'blog/404.html', locals())
+
+
+def page_error(request):
+	'''500'''
+	return render(request, 'blog/500.html', locals())
