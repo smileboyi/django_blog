@@ -134,7 +134,7 @@
                         {% endif %}
                         <em>{{ comment.submit_date }}</em>
                         {% if request.session.login or request.user.is_authenticated %}
-                        &nbsp;&nbsp;&nbsp;<a href="#">回复</a>
+                        &nbsp;&nbsp;&nbsp;<a href="{% url 'blog:comment_reply' comment.id %}">回复</a>
                         {% endif %}
                     </div>
                 <br />

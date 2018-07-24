@@ -11,7 +11,7 @@ from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 # https://www.cnblogs.com/feixuelove1009/p/8000556.html
 # blog应用用到django_comments应用的评论数据
 from django_comments.models import Comment
-
+from django_comments import models as comment_models
 # Create your views here.
 
 # 返回当前page页的数据，和一个实例paginator
@@ -220,7 +220,19 @@ def archives(request,year,month):
 	page = request.GET.get('page',1)
 	entry_list,paginator = make_paginator(entries,page)
 	page_data = pagination_data(paginator,page)
+
 	return render(request,'blog/index.html',locals())
+
+
+
+def reply(request,comment_id):
+	# https://www.cnblogs.com/gyh04541/p/7985968.html
+	if not request.session.get('login', None) and not request.user.is_authenticated:
+		return redirect('/')
+
+	parent_comment = get_object_or_404(comment_models.Comment, id=comment_id)
+
+	return render(request, 'blog/reply.html', locals())
 
 
 
