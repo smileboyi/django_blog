@@ -12,6 +12,10 @@ from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 # blog应用用到django_comments应用的评论数据
 from django_comments.models import Comment
 from django_comments import models as comment_models
+
+import requests
+import json
+from django.conf import settings
 # Create your views here.
 
 # 返回当前page页的数据，和一个实例paginator
@@ -249,3 +253,47 @@ def page_not_found(request):
 def page_error(request):
 	'''500'''
 	return render(request, 'blog/500.html', locals())
+
+
+
+def login(request):
+	# 先拿到授权code
+	code = request.GET.get('code', None)
+	if code is None:
+		return redirect('/')
+	
+	access_token_url = 'https://api.weibo.com/oauth2/access_token?client_id=%s&client_secret=%s&grant_type=authorization_code&redirect_uri=http://127.0.0.1:8000/login&code=%s'\
+                        %(settings.CLIENT_ID, settings.APP_SECRET, code)
+	ret = requests.post(access_token_url)
+
+	data = ret.text    #微博返回的数据是json格式的
+	data_dict = json.loads(data)   #转换成python字典格式
+	token = data_dict['access_token'] #通过code换取token，用于请求认证
+	uid = data_dict['uid']  # 通过unionID，可以拿到微博用户的基本信息
+
+	request.session['token'] = token
+	request.session['uid'] = uid
+	request.session['login'] = True
+
+	#获取微博用户的信息
+	user_info_url = 'https://api.weibo.com/2/users/show.json?access_token=%s&uid=%s' % (token, uid)
+	user_info = requests.get(user_info_url)
+	user_info_dict = json.loads(user_info.text)
+
+	request.session['screen_name'] = user_info_dict['screen_name']
+	request.session['profile_image_url'] = user_info_dict['profile_image_url']
+
+	return redirect(request.GET.get('next', '/'))
+
+
+
+def logout(request):
+	if request.session['login']:
+		del request.session['login']
+		del request.session['uid']
+		del request.session['token']
+		del request.session['screen_name']
+		del request.session['profile_image_url']
+		return redirect(request.Get.get('next', '/'))
+	else:
+		return redirect('/')

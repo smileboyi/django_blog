@@ -138,7 +138,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'static'),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR,'all_static_files')
 
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media').replace("//","/")
+
+
+CLIENT_ID = '224188xxx'
+APP_SECRET = '76daf2e9e424xxxx71144154f5xx32xx'

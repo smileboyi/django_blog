@@ -37,6 +37,8 @@ urlpatterns = [
     url('admin/', admin.site.urls),
     url(r'^blog/',include('blog.urls')),
     url(r'^comments/', include('django_comments.urls')),
+    url(r'^login/$', blog_views.login),
+    url(r'^logout/$', blog_views.logout),
     url(r'^latest/feed/$', LatestEntriesFeed()),    #RSS订阅
     # 如果sitemap.xml位于根目录中，它会引用网站中的任何URL。 但是如果站点地图位于/content/sitemap.xml，则它只能引用以/content/开头的网址。
     # 使用GenericSitemap构造一个GenericSitemap类型的数据，priority为更新频率0-1之间
