@@ -8,6 +8,8 @@ import markdown, pygments
 # https://www.cnblogs.com/kongzhagen/p/6640975.html
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
+# https://www.cnblogs.com/feixuelove1009/p/8000556.html
+# blog应用用到django_comments应用的评论数据
 from django_comments.models import Comment
 
 # Create your views here.
